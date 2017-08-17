@@ -1,0 +1,20 @@
+Plugin\Lib\Entity\KeyValue:
+    type: entity
+    table: plg_lib_key_value
+    repositoryClass: Plugin\Lib\Repository\KeyValueRepository
+    id:
+        collection:
+            type: string
+            nullable: false
+            length: 128
+            id: true
+        name:
+            type: string
+            nullable: false
+            length: 128
+            id: true
+    fields:
+        value:
+            type: blob
+            nullable: false
+    lifecycleCallbacks: {  }

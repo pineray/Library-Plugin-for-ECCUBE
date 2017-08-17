@@ -1,0 +1,7 @@
+name: Lib
+code: Lib
+version: 0.1.0
+service:
+    - LibServiceProvider
+orm.path:
+    - /Resource/doctrine
