@@ -26,9 +26,11 @@ class LibServiceProvider implements ServiceProviderInterface
     {
         // プラグイン用設定画面
         $app->match('/'.$app['config']['admin_route'].'/plugin/Lib/config', 'Plugin\Lib\Controller\ConfigController::index')->bind('plugin_Lib_config');
+        // cron手動実行
+        $app->match('/'.$app['config']['admin_route'].'/plugin/Lib/cron-run', 'Plugin\Lib\Controller\CronController::runManually')->bind('plugin_Lib_cron_manually');
 
         // 独自コントローラ
-        $app->match('/plugin/lib/hello', 'Plugin\Lib\Controller\LibController::index')->bind('plugin_Lib_hello');
+        $app->match('/lib/cron/{cron_key}', 'Plugin\Lib\Controller\CronController::run')->bind('plugin_Lib_cron')->assert('cron_key', '[A-Za-z0-9_-]+');
 
         // Form
         $app['form.types'] = $app->share($app->extend('form.types', function ($types) use ($app) {
@@ -46,6 +48,13 @@ class LibServiceProvider implements ServiceProviderInterface
         $app['plugin.lib.service.state'] = $app->share(function () use ($app) {
             return new \Plugin\Lib\Service\StateService($app);
         });
+        $app['plugin.lib.service.cron'] = $app->share(function () use ($app) {
+            return new \Plugin\Lib\Service\CronService($app);
+        });
+
+        // メッセージ登録
+        $message_file = __DIR__.'/../Resource/locale/message.'.$app['locale'].'.yml';
+        $app['translator']->addResource('yaml', $message_file, $app['locale']);
 
         // ログファイル設定
         $app['monolog.logger.lib'] = $app->share(function ($app) {

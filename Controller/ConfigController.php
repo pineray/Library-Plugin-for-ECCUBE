@@ -39,6 +39,8 @@ class ConfigController
 
         return $app->render('Lib/Resource/template/admin/config.twig', array(
             'form' => $form->createView(),
+            'cron_key' => $app['plugin.lib.service.state']->get('plugin.lib.cron_key'),
+            'cron_last' => $app['plugin.lib.service.state']->get('plugin.lib.cron_last', null),
         ));
     }
 

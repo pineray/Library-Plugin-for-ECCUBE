@@ -13,6 +13,7 @@ namespace Plugin\Lib;
 
 use Eccube\Application;
 use Eccube\Plugin\AbstractPluginManager;
+use Symfony\Component\Security\Core\Util\SecureRandom;
 
 class PluginManager extends AbstractPluginManager
 {
@@ -49,6 +50,11 @@ class PluginManager extends AbstractPluginManager
     public function enable($config, Application $app)
     {
         $this->migrationSchema($app, __DIR__.'/Resource/doctrine/migration', $config['code']);
+
+        $generator = new SecureRandom();
+        $cron_key = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($generator->nextBytes(55)));
+        $StateService = new \Plugin\Lib\Service\StateService($app);
+        $StateService->set('plugin.lib.cron_key', $cron_key);
     }
 
     /**
