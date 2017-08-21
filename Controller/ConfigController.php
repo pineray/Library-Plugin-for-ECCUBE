@@ -29,12 +29,16 @@ class ConfigController
 
         $form = $app['form.factory']->createBuilder('lib_config')->getForm();
 
+        $form->get('cron_interval')->setData($app['plugin.lib.service.state']->get('plugin.lib.cron_interval', 0));
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            // add code...
+            $app['plugin.lib.service.state']->set('plugin.lib.cron_interval', $data['cron_interval']);
+
+            $app->addSuccess('plugin.lib.config.done', 'admin');
         }
 
         return $app->render('Lib/Resource/template/admin/config.twig', array(

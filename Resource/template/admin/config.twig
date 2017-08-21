@@ -20,6 +20,9 @@
                         <p><a href="{{ url('plugin_Lib_cron_manually') }}" class="btn btn-default btn-lg">cronを実行</a></p>
                         <p>最後に実行した時間: {% if cron_last %}{{ cron_last|date("Y/m/d H:i:s") }}{% else %}未実行{% endif %}</p>
                         <p>サイトの外側からcronを実行するには、 <a href="{{ url('plugin_Lib_cron', {'cron_key': cron_key}) }}">{{ url('plugin_Lib_cron', {'cron_key': cron_key}) }}</a> にアクセスしてください。</p>
+                        <hr>
+                        <h4>Cronの自動実行</h4>
+                        {{ form_widget(form.cron_interval) }}
                     </div><!-- /.box-body -->
                 </div><!-- /.box -->
             </div><!-- /.col -->

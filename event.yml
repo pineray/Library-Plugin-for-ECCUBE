@@ -1,0 +1,2 @@
+eccube.event.front.response:
+    - [onFrontResponse, LAST]

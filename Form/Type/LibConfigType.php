@@ -21,14 +21,19 @@ class LibConfigType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('name', 'text', array(
-                'label' => '項目A',
-                'required' => true,
-                'constraints' => array(
-                    new Assert\NotBlank(),
-                ),
-            ));
+        $builder->add('cron_interval', 'choice',
+            [
+                'choices' => [
+                    0 => 'plugin.lib.form.cron_interval.0',
+                    3600 => 'plugin.lib.form.cron_interval.3600',
+                    10800 => 'plugin.lib.form.cron_interval.10800',
+                    21600 => 'plugin.lib.form.cron_interval.21600',
+                    43200 => 'plugin.lib.form.cron_interval.43200',
+                    86400 => 'plugin.lib.form.cron_interval.86400',
+                    604800 => 'plugin.lib.form.cron_interval.604800'
+                ]
+            ]
+        );
     }
 
     public function getName()

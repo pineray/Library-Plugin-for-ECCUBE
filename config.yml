@@ -5,3 +5,4 @@ service:
     - LibServiceProvider
 orm.path:
     - /Resource/doctrine
+event: LibEvent

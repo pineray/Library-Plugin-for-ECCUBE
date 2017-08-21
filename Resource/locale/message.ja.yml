@@ -1,2 +1,10 @@
 plugin.lib.cron.success: cronの実行に成功しました。
 plugin.lib.cron.failed: cronの実行に失敗しました。
+plugin.lib.config.done: 設定を保存しました。
+plugin.lib.form.cron_interval.0: 実行しない
+plugin.lib.form.cron_interval.3600: 1時間毎
+plugin.lib.form.cron_interval.10800: 3時間毎
+plugin.lib.form.cron_interval.21600: 6時間毎
+plugin.lib.form.cron_interval.43200: 12時間毎
+plugin.lib.form.cron_interval.86400: 1日毎
+plugin.lib.form.cron_interval.604800: 7日毎
