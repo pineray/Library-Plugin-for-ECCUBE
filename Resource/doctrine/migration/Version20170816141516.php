@@ -16,7 +16,8 @@ use Doctrine\ORM\Tools\SchemaTool;
 class Version20170816141516 extends AbstractMigration
 {
     protected $entities = array(
-      'Plugin\Lib\Entity\KeyValue',
+        'Plugin\Lib\Entity\KeyValue',
+        'Plugin\Lib\Entity\Queue',
     );
 
     public function __construct()

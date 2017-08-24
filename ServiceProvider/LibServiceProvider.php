@@ -43,6 +43,9 @@ class LibServiceProvider implements ServiceProviderInterface
         $app['plugin.lib.repository.KeyValue'] = $app->share(function () use ($app) {
             return $app['orm.em']->getRepository('Plugin\Lib\Entity\KeyValue');
         });
+        $app['plugin.lib.repository.Queue'] = $app->share(function () use ($app) {
+            return $app['orm.em']->getRepository('Plugin\Lib\Entity\Queue');
+        });
 
         // Service
         $app['plugin.lib.service.state'] = $app->share(function () use ($app) {

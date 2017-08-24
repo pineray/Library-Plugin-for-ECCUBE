@@ -14,6 +14,8 @@ namespace Plugin\Lib\Service;
 use Eccube\Application;
 use Eccube\Event\EventArgs;
 use Symfony\Component\HttpFoundation\Request;
+use Plugin\Lib\Queue\RequeueException;
+use Plugin\Lib\Queue\SuspendQueueException;
 
 class CronService
 {
@@ -64,6 +66,8 @@ class CronService
             $return = TRUE;
         }
 
+        $this->processQueues();
+
         return $return;
     }
 
@@ -92,5 +96,41 @@ class CronService
     public function release()
     {
         $this->app['plugin.lib.service.state']->delete('plugin.lib.cron_lock');
+    }
+
+    /**
+     * Processes cron queues.
+     */
+    protected function processQueues()
+    {
+        $types = $this->app['plugin.lib.repository.Queue']->getTypes();
+        foreach ($types as $type) {
+            $end = time() + (!empty($type['max_time']) ? $type['max_time'] : 15);
+            while (time() < $end && ($item = $this->app['plugin.lib.repository.Queue']->claimItem($type['name']))) {
+                try {
+                    $this->app[$item->getName()]->processItem($item->getData());
+                    $this->app['plugin.lib.repository.Queue']->deleteItem($item);
+                }
+                catch (RequeueException $e) {
+                    // The worker requested the task be immediately requeued.
+                    $this->app['plugin.lib.repository.Queue']->releaseItem($item);
+                }
+                catch (SuspendQueueException $e) {
+                    // If the worker indicates there is a problem with the whole queue,
+                    // release the item and skip to the next queue.
+                    $this->app['plugin.lib.repository.Queue']->releaseItem($item);
+
+                    log_error('The cron queue is suspended.', array($e->getMessage()));
+
+                    // Skip to the next queue.
+                    continue;
+                }
+                catch (\Exception $e) {
+                    // In case of any other kind of exception, log it and leave the item
+                    // in the queue to be processed again later.
+                    log_error('There was a problem when the cron queue is processing.', array($e->getMessage());
+                }
+            }
+        }
     }
 }

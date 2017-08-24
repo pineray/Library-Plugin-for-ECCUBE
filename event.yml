@@ -1,2 +1,4 @@
 eccube.event.front.response:
     - [onFrontResponse, LAST]
+plugin.lib.cron.run:
+    - [onCronRun, LAST]

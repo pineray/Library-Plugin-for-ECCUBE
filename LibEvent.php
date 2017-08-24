@@ -45,4 +45,10 @@ class LibEvent
             }
         }
     }
+
+    public function onCronRun()
+    {
+        // Clean up any garbage in the queue service.
+        $this->app['plugin.lib.repository.Queue']->garbageCollection();
+    }
 }

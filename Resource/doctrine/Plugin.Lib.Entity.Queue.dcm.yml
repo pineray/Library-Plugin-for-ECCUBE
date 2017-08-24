@@ -1,0 +1,36 @@
+Plugin\Lib\Entity\Queue:
+    type: entity
+    table: plg_lib_queue
+    repositoryClass: Plugin\Lib\Repository\QueueRepository
+    id:
+        item_id:
+            type: integer
+            nullable: false
+            unsigned: false
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        name:
+            type: string
+            nullable: false
+            length: 255
+        data:
+            type: blob
+            nullable: false
+        time:
+            type: integer
+            nullable: false
+            options:
+                default: '0'
+        expire:
+            type: integer
+            nullable: false
+            options:
+                default: '0'
+        created:
+            type: integer
+            nullable: false
+            options:
+                default: '0'
+    lifecycleCallbacks: {  }
