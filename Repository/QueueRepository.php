@@ -173,13 +173,13 @@ class QueueRepository extends EntityRepository
     {
         try {
             // Clean up the queue for failed batches.
-            $this->createQueryBuilder()
+            $this->createQueryBuilder('q')
                 ->delete('Queue', 'q')
                 ->where('q.created < :created')
                 ->setParameter('created', time() - 864000);
 
             // Reset expired items.
-            $this->createQueryBuilder()
+            $this->createQueryBuilder('q')
                 ->update('Queue', 'q')
                 ->set('q.expire', 0)
                 ->where('q.expire <> 0')

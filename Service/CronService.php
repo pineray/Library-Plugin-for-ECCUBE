@@ -128,7 +128,7 @@ class CronService
                 catch (\Exception $e) {
                     // In case of any other kind of exception, log it and leave the item
                     // in the queue to be processed again later.
-                    log_error('There was a problem when the cron queue is processing.', array($e->getMessage());
+                    log_error('There was a problem when the cron queue is processing.', array($e->getMessage()));
                 }
             }
         }
