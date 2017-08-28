@@ -72,6 +72,7 @@ class QueueRepository extends EntityRepository
         try {
             $types = $this->createQueryBuilder('q')
                 ->select(['q.name, MAX(q.time) AS max_time'])
+                ->groupBy('q.name')
                 ->getQuery()
                 ->getResult();
             return $types;
