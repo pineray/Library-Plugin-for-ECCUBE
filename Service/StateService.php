@@ -20,7 +20,7 @@ class StateService
     protected $keyValueStore;
 
     /** @var array */
-    protected $cache;
+    static $cache;
 
     public function __construct(\Eccube\Application $app)
     {
@@ -30,8 +30,8 @@ class StateService
         $this->keyValueStore->setCollection('state');
         $this->keyValueStore->setApplication($app);
 
-        if (empty($this->cache)) {
-            $this->cache = $this->keyValueStore->getAll();
+        if (empty(static::$cache)) {
+            static::$cache = $this->keyValueStore->getAll();
         }
     }
 
@@ -41,7 +41,7 @@ class StateService
      * @return mixed|null
      */
     public function get($key, $default = NULL) {
-        return (isset($this->cache[$key])) ? $this->cache[$key] : $default;
+        return (isset(static::$cache[$key])) ? static::$cache[$key] : $default;
     }
 
     /**
@@ -61,7 +61,7 @@ class StateService
      * @param mixed $value
      */
     public function set($key, $value) {
-        $this->cache[$key] = $value;
+        static::$cache[$key] = $value;
         $this->keyValueStore->set($key, $value);
     }
 
@@ -70,7 +70,7 @@ class StateService
      */
     public function setMultiple(array $data) {
         foreach ($data as $key => $value) {
-            $this->cache[$key] = $value;
+            static::$cache[$key] = $value;
         }
         $this->keyValueStore->setMultiple($data);
     }
@@ -87,12 +87,12 @@ class StateService
      */
     public function deleteMultiple(array $keys) {
         foreach ($keys as $key) {
-            unset($this->cache[$key]);
+            unset(static::$cache[$key]);
         }
         $this->keyValueStore->deleteMultiple($keys);
     }
 
     public function resetCache() {
-        $this->cache = $this->keyValueStore->getAll();
+        static::$cache = $this->keyValueStore->getAll();
     }
 }
