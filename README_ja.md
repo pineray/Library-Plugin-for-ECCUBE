@@ -9,6 +9,7 @@ ECCUBE 3.0.x用 汎用ツールプラグイン
 * Cronイベント: プラグインが提供するパスにアクセスするとCronイベントが発生し、フックしている処理が実行されます。
 * Cronの自動実行: 設定した時間ごとにCronイベントを自動で発生させます。
 * Cron実行キュー: 細かく分割できる処理（たとえばCSVからのデータ登録など）をキューとして登録することで、Cronイベントの際にそれらが順に処理されます。
+* ナビゲーションメニュー登録: 管理画面のナビゲーションメニューを登録できます。
 
 ## 使用方法
 
@@ -92,6 +93,91 @@ $app['plugin.lib.repository.Queue']->createItem($name, $data, $time);
 * **$name**: アプリでシェアしたインスタンスのキー。上記の例では QUEUE_EXAMPLE となります。必須。
 * **$data**: processItem関数へ渡す引数。PHPのどのデータ型でも扱えます。
 * **$time**: 処理に要するおおよその時間。
+
+### ナビゲーションメニュー登録
+
+ServiceProvider内で以下のように記述することで、管理画面のナビゲーションメニューを追加できます。
+
+```php
+// メニュー内容の配列
+$addNavi = [
+    'id' => 'sample_nav_item',
+    'name' => 'SAMPLEMENU',
+    'has_child' => true,
+    'child' => [
+        [
+            'id' => 'sample_nav_child_1',
+            'name' => 'SAMPLECHILD1',
+            'url' => 'plugin_sample_nav_child_1',
+        ],
+        [
+            'id' => 'sample_nav_child_2',
+            'name' => 'SAMPLECHILD2',
+            'url' => 'plugin_sample_nav_child_2',
+        ],
+        [
+            'id' => 'sample_nav_child_3',
+            'name' => 'SAMPLECHILD3',
+            'url' => 'plugin_sample_nav_child_3',
+        ],
+    ],
+];
+
+// アプリケーションに登録
+$Nav = new \Plugin\Lib\Util\Nav($app);
+$Nav->find('content');
+$Nav->append($addNavi);
+```
+
+まずはナビゲーションユーティリティークラスのインスタンスを作成します。
+
+```php
+$Nav = new \Plugin\Lib\Util\Nav($app, $target);
+```
+
+##### パラメーター
+
+* **$app**: 必須。
+* **$target**: メニューを追加する起点となるメニュー項目のID。ここで指定した場合は次の find()　は実行する必要がありません。任意。 
+
+次に、メニューを追加する起点となるメニュー項目を指定します。
+
+```php
+$Nav->find($target);
+```
+
+##### パラメーター
+
+* **$target**: メニューを追加する起点となるメニュー項目のID。必須。
+
+そして最後にメニュー項目を登録します。
+
+```php
+// 対象の子メニューの最後に追加
+$Nav->append($item);
+// 対象の子メニューの先頭に追加
+$Nav->prepend($item);
+// 対象のひとつ前に追加
+$Nav->before($item);
+// 対象のひとつ後に追加
+$Nav->after($item);
+```
+
+##### パラメーター
+
+* **$item**: 登録するメニュー項目の配列。必須。
+
+find() と登録用の各種関数はチェーンメソッドで記述することもできます。
+
+```php
+$Nav->find($target)->append($item);
+```
+
+スタティック関数を使用することで、インスタンスを変数に格納することなくメニュー項目を登録することもできます。
+
+```php
+\Plugin\Lib\Util\Nav::forge($app)->find($target)->append($item);
+```
 
 ## 開発者
 
